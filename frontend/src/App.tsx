@@ -75,7 +75,7 @@ export default function App() {
       }
     }
 
-    if ((window as any).__TAURI_INTERNALS__) {
+    if ((window as any).__TAURI_INTERNALS__ && !import.meta.env.MODE.includes('test')) {
       checkForUpdates();
     }
   }, []);
