@@ -10,6 +10,6 @@ describe("中文本地化文案", () => {
     await expect(readWorkspaceFile("./pages/MainLayout.tsx")).resolves.toContain("仪表盘");
     await expect(readWorkspaceFile("./pages/SessionsPage.tsx")).resolves.toContain("会话");
     await expect(readWorkspaceFile("./pages/ConnectPage.tsx")).resolves.toContain("连接到网关");
-    await expect(readWorkspaceFile("../../README.md")).resolves.toContain("## 项目结构");
+    await expect(readWorkspaceFile("../../README.md")).resolves.toContain("## 🏗️ 架构设计");
   });
 });
