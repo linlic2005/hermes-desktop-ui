@@ -1,0 +1,28 @@
+[project]
+name = "hermes-ui-gateway"
+version = "0.1.0"
+description = "FastAPI gateway backend for Hermes Desktop UI"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic-settings>=2.4.0",
+  "sqlalchemy>=2.0.0",
+  "httpx>=0.27.0",
+  "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+pty = ["ptyprocess>=0.7.0"]
+windows-pty = ["pywinpty>=2.0.0"]
+test = [
+  "pytest>=8.0.0",
+  "anyio>=4.0.0",
+  "websockets>=12.0",
+  "pytest-asyncio>=0.24.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"

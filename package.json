@@ -1,0 +1,22 @@
+{
+  "name": "hermes-desktop-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "apps/desktop-tauri"
+  ],
+  "scripts": {
+    "dev": "npm --workspace @hermes/desktop-ui-frontend run dev",
+    "build": "npm --workspace @hermes/desktop-ui-frontend run build",
+    "preview": "npm --workspace @hermes/desktop-ui-frontend run preview",
+    "lint": "npm --workspace @hermes/desktop-ui-frontend run lint",
+    "typecheck": "npm --workspace @hermes/desktop-ui-frontend run typecheck",
+    "test": "npm --workspace @hermes/desktop-ui-frontend run test",
+    "e2e": "npm --workspace @hermes/desktop-ui-frontend run e2e",
+    "tauri": "npm --workspace @hermes/desktop-tauri run tauri --",
+    "tauri:dev": "npm --workspace @hermes/desktop-tauri run tauri -- dev",
+    "tauri:build": "npm --workspace @hermes/desktop-tauri run tauri -- build"
+  }
+}

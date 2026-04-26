@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Hermes Desktop UI",
+  "version": "0.1.0",
+  "identifier": "com.hermes.desktopui",
+  "build": {
+    "beforeDevCommand": "npm --workspace @hermes/desktop-ui-frontend run dev",
+    "devUrl": "http://localhost:3000",
+    "beforeBuildCommand": "npm --workspace @hermes/desktop-ui-frontend run build",
+    "frontendDist": "../../../frontend/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Hermes Desktop UI",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 1100,
+        "minHeight": 720,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "dmg", "app"],
+    "category": "DeveloperTool",
+    "shortDescription": "Desktop control client for Hermes Agent Dashboard",
+    "longDescription": "Hermes Desktop UI connects to a local or LAN Gateway and controls Hermes without exposing the unauthenticated official Dashboard."
+  }
+}
