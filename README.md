@@ -1,7 +1,7 @@
 # Hermes Desktop UI 🚀
 
-[![CI](https://github.com/YourUsername/hermes-desktop-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/YourUsername/hermes-desktop-ui/actions/workflows/ci.yml)
-[![Releases](https://img.shields.io/github/v/release/YourUsername/hermes-desktop-ui)](https://github.com/YourUsername/hermes-desktop-ui/releases)
+[![CI](https://github.com/linlic2005/hermes-desktop-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/linlic2005/hermes-desktop-ui/actions/workflows/ci.yml)
+[![Releases](https://img.shields.io/github/v/release/linlic2005/hermes-desktop-ui)](https://github.com/linlic2005/hermes-desktop-ui/releases)
 
 **Hermes Desktop UI** 是一款专为 Hermes Agent 设计的高性能桌面控制客户端。它基于 Tauri 2 + React + Vite 构建，旨在为用户提供一个安全、直观且跨平台的图形界面，用于管理和调度 Hermes 代理任务。
 
@@ -16,7 +16,7 @@
 ## 📦 安装指南
 
 ### 下载预编译包 (推荐)
-请前往 [Releases](https://github.com/YourUsername/hermes-desktop-ui/releases) 页面下载适合您系统的安装程序：
+请前往 [Releases](https://github.com/linlic2005/hermes-desktop-ui/releases) 页面下载适合您系统的安装程序：
 - **Windows**: 下载 `.msi` 或 `.exe` 文件。
 - **macOS**: 下载 `.dmg` 文件。
 
@@ -24,7 +24,7 @@
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/YourUsername/hermes-desktop-ui.git
+   git clone https://github.com/linlic2005/hermes-desktop-ui.git
    cd hermes-desktop-ui
    ```
 
