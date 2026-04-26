@@ -71,11 +71,11 @@ export default function App() {
           }
         }
       } catch (error) {
-        console.error("检查更新失败:", error);
+        console.error("检查更新失败", error);
       }
     }
 
-    if ((window as any).__TAURI_INTERNALS__ && !import.meta.env.MODE.includes('test')) {
+    if ((window as any).__TAURI_INTERNALS__ && !((import.meta as any).env.MODE || '').includes('test')) {
       checkForUpdates();
     }
   }, []);
