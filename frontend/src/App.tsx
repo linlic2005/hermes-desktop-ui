@@ -1,5 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { check } from "@tauri-apps/plugin-updater";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { useConnectionStore } from "./store/connectionStore";
 import { useThemeStore } from "./store/themeStore";
 import { api } from "./api/client";
@@ -45,6 +47,38 @@ export default function App() {
     const connection = connections.find((item) => item.id === activeConnectionId) || null;
     api.setConfig(connection);
   }, [activeConnectionId, connections]);
+
+  useEffect(() => {
+    async function checkForUpdates() {
+      try {
+        const update = await check();
+        if (update) {
+          console.log(`Update to ${update.version} available! Date: ${update.date}`);
+          console.log(`Release notes: ${update.body}`);
+
+          const yes = await ask(
+            `新版本 v${update.version} 已发布！\n\n更新内容：\n${update.body || "无说明"}\n\n是否立即下载并安装？`,
+            {
+              title: "发现新版本",
+              kind: "info",
+              okLabel: "立即更新",
+              cancelLabel: "稍后再说",
+            }
+          );
+
+          if (yes) {
+            await update.downloadAndInstall();
+          }
+        }
+      } catch (error) {
+        console.error("检查更新失败:", error);
+      }
+    }
+
+    if ((window as any).__TAURI_INTERNALS__) {
+      checkForUpdates();
+    }
+  }, []);
 
   // Make MainLayout and children accessible if no active connection (useful for Connect, but we redirect Connect)
   // According to instruction: "if no active connection: /connect"
