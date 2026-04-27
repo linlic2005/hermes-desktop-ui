@@ -17,7 +17,7 @@
 
 ### 下载预编译包 (推荐)
 请前往 [Releases](https://github.com/linlic2005/hermes-desktop-ui/releases) 页面下载适合您系统的安装程序：
-- **Windows**: 下载 `.msi` 或 `.exe` 文件。
+- **Windows**: 下载 `.msi` 或 `.exe` 文件。（*注：已修复安装后双击快捷方式无响应的问题*）
 - **macOS**: 下载 `.dmg` 文件。
 
 ### 从源码构建
