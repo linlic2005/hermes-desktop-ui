@@ -30,12 +30,14 @@
     "updater": {
       "endpoints": [
         "https://github.com/linlic2005/hermes-desktop-ui/releases/latest/download/latest.json"
-      ]
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg1QTgwMzhCREQxQjI2QwpSV1Jzc3RHOU9JQmFDSjlYbzhtQnRPcTlLSDBQd2duMGoxQW5SUmtpNnBwdWpaVUdQSHMwc1ZXOAo="
     }
   },
   "bundle": {
     "active": true,
     "targets": ["nsis", "dmg", "app"],
+    "publisher": "Hermes",
     "category": "DeveloperTool",
     "shortDescription": "Desktop control client for Hermes Agent Dashboard",
     "longDescription": "Hermes Desktop UI connects to a local or LAN Gateway and controls Hermes without exposing the unauthenticated official Dashboard."

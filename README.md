@@ -18,6 +18,7 @@
 ### 下载预编译包 (推荐)
 请前往 [Releases](https://github.com/linlic2005/hermes-desktop-ui/releases) 页面下载适合您系统的安装程序：
 - **Windows**: 下载 `.msi` 或 `.exe` 文件。（*注：已修复安装后双击快捷方式无响应的问题*）
+  - **注意**：由于未购买昂贵的企业代码签名证书，下载或安装时 Windows SmartScreen 可能会弹出蓝色警告拦截。请点击 **“更多信息” (More info)** -> **“仍要运行” (Run anyway)**。
 - **macOS**: 下载 `.dmg` 文件。
 
 ### 从源码构建
