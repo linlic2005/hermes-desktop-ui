@@ -178,6 +178,23 @@ export function ConnectPage() {
               </div>
             </div>
 
+            <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm dark:border-blue-900/50 dark:bg-blue-950/30">
+              <div className="flex items-center gap-2 font-medium text-blue-900 dark:text-blue-200">
+                <Terminal className="h-4 w-4" />
+                SSH 直接连接指南
+              </div>
+              <div className="mt-2 space-y-2 text-blue-800/80 dark:text-blue-300/80">
+                <p>网关内置了 SSH 服务器，允许您使用原生终端直接访问 Hermes TUI：</p>
+                <div className="flex items-center justify-between gap-3 rounded border border-blue-200 bg-white p-2 font-mono text-xs dark:border-blue-800 dark:bg-zinc-950">
+                  <span>ssh hermes@{new URL(apiBaseUrl || "http://127.0.0.1").hostname} -p 2222</span>
+                  <Copy className="h-4 w-4 cursor-pointer hover:text-blue-500" />
+                </div>
+                <p className="text-[11px]">
+                  <strong>认证：</strong> 用户名为 <code className="rounded bg-blue-100 px-1 dark:bg-blue-900">hermes</code>，密码为您的 <code className="rounded bg-blue-100 px-1 dark:bg-blue-900">HERMES_UI_TOKEN</code>。
+                </p>
+              </div>
+            </div>
+
             {testResult && (
               <div className={`flex items-start gap-2 rounded-lg border p-3 text-sm ${testResult.ok ? "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200" : "border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200"}`}>
                 {testResult.ok ? <CheckCircle2 className="mt-0.5 h-4 w-4" /> : <XCircle className="mt-0.5 h-4 w-4" />}
