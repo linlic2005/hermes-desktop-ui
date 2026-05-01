@@ -41,9 +41,12 @@ export interface HealthResponse {
   localMode: boolean;
   hermesDashboard: string;
   hermesCommandAvailable: boolean;
-  ptySupported: boolean;
+  ptySupported: bool;
   nativeWindowsExperimental: boolean;
+  sshEnabled: boolean;
+  sshPort?: number | null;
   version: string;
+
   time: string;
   message: string;
 }
@@ -59,6 +62,8 @@ export interface ServerInfoResponse {
   gatewayUrl: string;
   ptySupported: boolean;
   nativeWindowsExperimental: boolean;
+  sshEnabled: boolean;
+  sshPort?: number | null;
   wslDetected: boolean;
 }
 
@@ -80,6 +85,8 @@ export interface StatusResponse {
     mode?: string;
     host?: string;
     port?: number;
+    sshEnabled?: boolean;
+    sshPort?: number | null;
     platforms?: PlatformState[];
   };
   activeSessions?: number;
@@ -96,6 +103,8 @@ export interface SystemStatus {
   gatewayMode?: string;
   gatewayHost?: string;
   gatewayPort?: number;
+  sshEnabled?: boolean;
+  sshPort?: number | null;
   connectedPlatforms: PlatformState[];
   activeSessionsCount: number;
   recentSessions: SessionInfo[];

@@ -26,6 +26,8 @@ def server_info() -> dict:
         gateway_url=settings.gateway_url,
         pty_supported=settings.pty_supported,
         native_windows_experimental=settings.native_windows_experimental,
+        ssh_enabled=settings.hermes_ssh_enabled,
+        ssh_port=settings.hermes_ssh_port if settings.hermes_ssh_enabled else None,
         wsl_detected=settings.wsl_detected,
     ).model_dump(by_alias=True)
 
@@ -38,6 +40,8 @@ def gateway_summary() -> dict:
             "pid": None,
             "uptime": None,
             "mode": settings.hermes_ui_mode,
+            "ssh_enabled": settings.hermes_ssh_enabled,
+            "ssh_port": settings.hermes_ssh_port if settings.hermes_ssh_enabled else None,
         },
         "platforms": [],
         "rawStatus": {},

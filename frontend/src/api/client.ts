@@ -81,7 +81,10 @@ function normalizeStatus(raw: StatusResponse): SystemStatus {
     gatewayMode: gateway.mode,
     gatewayHost: gateway.host,
     gatewayPort: gateway.port,
+    sshEnabled: gateway.ssh_enabled,
+    sshPort: gateway.ssh_port,
     connectedPlatforms: gateway.platforms || [],
+
     activeSessionsCount: raw.activeSessions || 0,
     recentSessions: (raw.recentSessions || []).map(normalizeSession),
     model: raw.model,

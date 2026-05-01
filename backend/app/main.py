@@ -11,6 +11,7 @@ from .config import settings
 from .db import init_db
 from .errors import install_error_handlers
 from .pty_manager import pty_manager
+from .ssh_server import start_ssh_server
 from .routers import health, local, proxy, server, tui_ws, ui_sessions
 
 
@@ -31,9 +32,17 @@ async def lifespan(app: FastAPI):
                 continue
 
     task = asyncio.create_task(cleanup_loop())
+    
+    ssh_server = None
+    if settings.hermes_ssh_enabled:
+        ssh_server = await start_ssh_server()
+
     try:
         yield
     finally:
+        if ssh_server:
+            ssh_server.close()
+            await ssh_server.wait_closed()
         stop_event.set()
         task.cancel()
         try:

@@ -89,6 +89,10 @@ export function StatusPage() {
                   <span className="text-zinc-500">PID</span><span>{status.gatewayPid || "未知"}</span>
                   <span className="text-zinc-500">模式</span><span>{labelFor(stateLabels, status.gatewayMode)}</span>
                   <span className="text-zinc-500">监听</span><span>{status.gatewayHost || "未知"}:{status.gatewayPort || "未知"}</span>
+                  <span className="text-zinc-500">SSH</span>
+                  <span className={status.sshEnabled ? "text-emerald-500 font-medium" : "text-zinc-400"}>
+                    {status.sshEnabled ? `运行中 (端口 ${status.sshPort})` : "已禁用"}
+                  </span>
                 </div>
                 <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
                   {status.connectedPlatforms.length === 0 ? (

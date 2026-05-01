@@ -28,6 +28,8 @@ def health() -> dict:
         hermes_command_available=command_available(settings.hermes_command),
         pty_supported=settings.pty_supported,
         native_windows_experimental=settings.native_windows_experimental,
+        ssh_enabled=settings.hermes_ssh_enabled,
+        ssh_port=settings.hermes_ssh_port if settings.hermes_ssh_enabled else None,
         version=__version__,
         time=datetime.now(timezone.utc).isoformat(),
         message=message,

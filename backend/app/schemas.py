@@ -19,6 +19,8 @@ class HealthResponse(CamelModel):
     hermes_command_available: bool = Field(alias="hermesCommandAvailable")
     pty_supported: bool = Field(alias="ptySupported")
     native_windows_experimental: bool = Field(alias="nativeWindowsExperimental")
+    ssh_enabled: bool = Field(alias="sshEnabled")
+    ssh_port: int | None = Field(alias="sshPort")
     version: str
     time: str
     message: str
@@ -35,6 +37,8 @@ class ServerInfoResponse(CamelModel):
     gateway_url: str = Field(alias="gatewayUrl")
     pty_supported: bool = Field(alias="ptySupported")
     native_windows_experimental: bool = Field(alias="nativeWindowsExperimental")
+    ssh_enabled: bool = Field(alias="sshEnabled")
+    ssh_port: int | None = Field(alias="sshPort")
     wsl_detected: bool = Field(alias="wslDetected")
 
 

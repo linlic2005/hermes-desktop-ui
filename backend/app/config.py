@@ -79,6 +79,13 @@ class Settings(BaseSettings):
         default=None, alias="HERMES_FORCE_PTY_SUPPORTED_FOR_TESTS"
     )
 
+    # SSH Server Settings
+    hermes_ssh_enabled: bool = Field(default=False, alias="HERMES_SSH_ENABLED")
+    hermes_ssh_port: int = Field(default=2222, alias="HERMES_SSH_PORT")
+    hermes_ssh_user: str = Field(default="hermes", alias="HERMES_SSH_USER")
+    hermes_ssh_password: str | None = Field(default=None, alias="HERMES_SSH_PASSWORD")
+    hermes_ssh_host_key_path: str = Field(default="ssh_host_key", alias="HERMES_SSH_HOST_KEY_PATH")
+
     @field_validator("hermes_dashboard_url")
     @classmethod
     def validate_dashboard_url(cls, value: str) -> str:
@@ -120,6 +127,9 @@ class Settings(BaseSettings):
 
         if self.hermes_tui_command == "":
             self.hermes_tui_command = None
+
+        if self.hermes_ssh_password is None:
+            self.hermes_ssh_password = self.hermes_ui_token
 
         return self
 

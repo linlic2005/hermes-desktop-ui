@@ -1,0 +1,20 @@
+Metadata-Version: 2.4
+Name: hermes-ui-gateway
+Version: 0.1.0
+Summary: FastAPI gateway backend for Hermes Desktop UI
+Requires-Python: >=3.10
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: pydantic-settings>=2.4.0
+Requires-Dist: sqlalchemy>=2.0.0
+Requires-Dist: httpx>=0.27.0
+Requires-Dist: python-dotenv>=1.0.0
+Provides-Extra: pty
+Requires-Dist: ptyprocess>=0.7.0; extra == "pty"
+Provides-Extra: windows-pty
+Requires-Dist: pywinpty>=2.0.0; extra == "windows-pty"
+Provides-Extra: test
+Requires-Dist: pytest>=8.0.0; extra == "test"
+Requires-Dist: anyio>=4.0.0; extra == "test"
+Requires-Dist: websockets>=12.0; extra == "test"
+Requires-Dist: pytest-asyncio>=0.24.0; extra == "test"
