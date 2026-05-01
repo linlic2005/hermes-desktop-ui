@@ -81,8 +81,8 @@ function normalizeStatus(raw: StatusResponse): SystemStatus {
     gatewayMode: gateway.mode,
     gatewayHost: gateway.host,
     gatewayPort: gateway.port,
-    sshEnabled: gateway.ssh_enabled,
-    sshPort: gateway.ssh_port,
+    sshEnabled: gateway.sshEnabled,
+    sshPort: gateway.sshPort,
     connectedPlatforms: gateway.platforms || [],
 
     activeSessionsCount: raw.activeSessions || 0,
@@ -474,6 +474,8 @@ function mockHealth(): HealthResponse {
     hermesCommandAvailable: true,
     ptySupported: true,
     nativeWindowsExperimental: false,
+    sshEnabled: true,
+    sshPort: 2222,
     version: "0.1.0",
     time: new Date().toISOString(),
     message: "Gateway 正在运行",
@@ -492,6 +494,8 @@ function mockServerInfo(): ServerInfo {
     gatewayUrl: "http://127.0.0.1:9788",
     ptySupported: true,
     nativeWindowsExperimental: false,
+    sshEnabled: true,
+    sshPort: 2222,
     wslDetected: false,
   };
 }

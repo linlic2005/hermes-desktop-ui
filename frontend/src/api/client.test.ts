@@ -22,6 +22,8 @@ const health: HealthResponse = {
   hermesCommandAvailable: true,
   ptySupported: true,
   nativeWindowsExperimental: false,
+  sshEnabled: true,
+  sshPort: 2222,
   version: "0.1.0",
   time: "2026-04-26T00:00:00.000Z",
   message: "Gateway is running",

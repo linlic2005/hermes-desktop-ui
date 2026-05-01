@@ -41,7 +41,7 @@ export interface HealthResponse {
   localMode: boolean;
   hermesDashboard: string;
   hermesCommandAvailable: boolean;
-  ptySupported: bool;
+  ptySupported: boolean;
   nativeWindowsExperimental: boolean;
   sshEnabled: boolean;
   sshPort?: number | null;
