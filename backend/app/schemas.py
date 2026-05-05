@@ -129,3 +129,83 @@ class LocalDiscoverResponse(CamelModel):
     pty: dict[str, Any]
     node: dict[str, Any]
     suggested_commands: list[str] = Field(alias="suggestedCommands")
+
+
+# Remote SSH Management Models
+
+RemoteAuthType = Literal["password", "privateKey"]
+
+
+class RemoteSshConfig(CamelModel):
+    host: str
+    port: int = 22
+    username: str
+    auth_type: RemoteAuthType = Field(alias="authType")
+    password: str | None = None
+    private_key: str | None = Field(default=None, alias="privateKey")
+    passphrase: str | None = None
+    timeout_seconds: int = Field(default=10, alias="timeoutSeconds")
+
+
+class RemoteSshTestResponse(CamelModel):
+    ok: bool
+    host: str
+    username: str
+    hostname: str | None = None
+    os: str | None = None
+    message: str
+
+
+class RemoteDiscoverRequest(RemoteSshConfig):
+    hermes_home: str = Field(default="~/.hermes", alias="hermesHome")
+    dashboard_port: int = Field(default=9119, alias="dashboardPort")
+    gateway_port: int = Field(default=9788, alias="gatewayPort")
+    hermes_gateway_port: int = Field(default=8642, alias="hermesGatewayPort")
+
+
+class RemoteServiceStatus(CamelModel):
+    port: int
+    listening: bool
+    url: str | None = None
+
+
+class RemoteDiscoverResponse(CamelModel):
+    ok: bool
+    system: dict[str, Any]
+    hermes: dict[str, Any]
+    services: dict[str, RemoteServiceStatus]
+    suggested_commands: list[str] = Field(alias="suggestedCommands")
+    warnings: list[str]
+
+
+RemoteServiceTarget = Literal["dashboard", "uiGateway", "hermesGateway"]
+
+
+class RemoteServiceActionRequest(CamelModel):
+    connection: RemoteSshConfig
+    target: RemoteServiceTarget
+    host: str = "0.0.0.0"
+    port: int
+    profile: str = "default"
+    hermes_home: str = Field(default="~/.hermes", alias="hermesHome")
+
+
+class RemoteServiceActionResponse(CamelModel):
+    ok: bool
+    target: RemoteServiceTarget
+    pid: int | None = None
+    url: str | None = None
+    message: str
+
+
+class RemoteLogsRequest(CamelModel):
+    connection: RemoteSshConfig
+    target: Literal["dashboard", "uiGateway", "hermesGateway", "agent"]
+    lines: int = 200
+    hermes_home: str = Field(default="~/.hermes", alias="hermesHome")
+
+
+class RemoteLogsResponse(CamelModel):
+    ok: bool
+    logs: list[dict[str, Any]] = []
+    raw: str

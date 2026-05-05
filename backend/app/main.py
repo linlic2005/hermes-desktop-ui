@@ -4,18 +4,27 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from .config import settings
 from .db import init_db
 from .errors import install_error_handlers
 from .pty_manager import pty_manager
 from .ssh_server import start_ssh_server
-from .routers import health, local, proxy, server, tui_ws, ui_sessions
+from .routers import health, local, proxy, remote, server, tui_ws, ui_sessions
 
 
 logging.basicConfig(level=getattr(logging, settings.log_level.upper(), logging.INFO))
+
+
+class PrivateNetworkAccessMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        if request.headers.get("access-control-request-private-network"):
+            response.headers["access-control-allow-private-network"] = "true"
+        return response
 
 
 @asynccontextmanager
@@ -56,16 +65,18 @@ app = FastAPI(title="Hermes UI Gateway", version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(PrivateNetworkAccessMiddleware)
 
 install_error_handlers(app)
 
 app.include_router(health.router)
 app.include_router(server.router)
 app.include_router(local.router)
+app.include_router(remote.router)
 app.include_router(ui_sessions.router)
 app.include_router(tui_ws.router)
 app.include_router(proxy.router)

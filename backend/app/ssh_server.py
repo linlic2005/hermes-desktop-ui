@@ -49,21 +49,25 @@ class HermesSSHSession(asyncssh.SSHServerSession):
         if self._running:
             asyncio.create_task(pty_manager.resize(self._running, width, height))
 
-    async def shell_requested(self):
+    def shell_requested(self):
+        asyncio.create_task(self._start_session())
+        return True
+
+    async def _start_session(self):
         # 启动一个虚拟的 UI Session
         self._ui_session_id = f"ssh-{os.urandom(4).hex()}"
         
         # 创建一个模拟的 UiSession 对象
         ui_session = UiSession(
             id=self._ui_session_id,
-            title=f"SSH Session ({self._chan.get_extra_info('peername')[0]})",
-            platform="ssh",
-            source="ssh"
+            title=f"SSH Session ({self._chan.get_extra_info('peername')[0]})"
         )
         
         # 将会话写入数据库（可选，但为了保持一致性建议写入）
         with SessionLocal() as db:
-            session_manager.create_session(db, ui_session)
+            db.add(ui_session)
+            db.commit()
+            db.refresh(ui_session)
 
         try:
             # 启动 PTY 进程
@@ -77,13 +81,11 @@ class HermesSSHSession(asyncssh.SSHServerSession):
             output_queue = pty_manager.subscribe(self._running)
             
             # 启动双向转发
-            asyncio.create_task(self._forward_output(output_queue))
-            return True
+            await self._forward_output(output_queue)
         except Exception as e:
             logger.error(f"Failed to start PTY for SSH session: {e}")
             self._chan.write(f"Error: Failed to start Hermes TUI: {e}\r\n")
             self._chan.exit(1)
-            return False
 
     async def _forward_output(self, queue):
         try:

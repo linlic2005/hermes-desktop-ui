@@ -56,7 +56,8 @@ class PtyManager:
         return env
 
     def build_cwd(self, ui_session: UiSession) -> str | None:
-        return ui_session.cwd or settings.hermes_workdir
+        cwd = ui_session.cwd or settings.hermes_workdir
+        return cwd if cwd else None
 
     async def start(self, ui_session: UiSession) -> RunningTui:
         existing = self.sessions.get(ui_session.id)

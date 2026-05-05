@@ -19,6 +19,11 @@ import {
   PluginInfo,
   ProcessInfo,
   ServerInfo,
+  RemoteDiscoverResponse,
+  RemoteLogsResponse,
+  RemoteServiceActionResponse,
+  RemoteServiceTarget,
+  RemoteSshTestResponse,
   SessionInfo,
   SessionResponse,
   SkillInfo,
@@ -160,7 +165,8 @@ export class ApiClient {
         ...options,
         headers,
       });
-    } catch {
+    } catch (err: unknown) {
+      console.error("Fetch failed:", err);
       throw normalizeGatewayError(0, null, "network_error");
     }
 
@@ -399,6 +405,48 @@ export class ApiClient {
 
   async restartGateway(): Promise<Record<string, unknown>> {
     return this.request("/api/gateway/restart", { method: "POST" });
+  }
+
+  async testRemoteSsh(config: ConnectionConfig["ssh"]): Promise<RemoteSshTestResponse> {
+    return this.request<RemoteSshTestResponse>("/api/remote/test-ssh", {
+      method: "POST",
+      body: JSON.stringify(config),
+    });
+  }
+
+  async discoverRemote(request: any): Promise<RemoteDiscoverResponse> {
+    return this.request<RemoteDiscoverResponse>("/api/remote/discover", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  }
+
+  async startRemoteService(payload: any): Promise<RemoteServiceActionResponse> {
+    return this.request<RemoteServiceActionResponse>("/api/remote/start", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async stopRemoteService(payload: any): Promise<RemoteServiceActionResponse> {
+    return this.request<RemoteServiceActionResponse>("/api/remote/stop", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async restartRemoteService(payload: any): Promise<RemoteServiceActionResponse> {
+    return this.request<RemoteServiceActionResponse>("/api/remote/restart", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getRemoteLogs(payload: any): Promise<RemoteLogsResponse> {
+    return this.request<RemoteLogsResponse>("/api/remote/logs", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   }
 
   async getActionStatus(name: string): Promise<Record<string, unknown>> {

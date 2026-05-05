@@ -8,6 +8,23 @@ export interface ConnectionConfig {
   wsBaseUrl: string;
   dashboardUrl?: string;
   token?: string;
+  ssh?: {
+    host: string;
+    port: number;
+    username: string;
+    authType: "password" | "privateKey";
+    password?: string;
+    privateKey?: string;
+    passphrase?: string;
+    timeoutSeconds?: number;
+  };
+  remote?: {
+    hermesHome?: string;
+    dashboardPort?: number;
+    gatewayPort?: number;
+    hermesGatewayPort?: number;
+    profile?: string;
+  };
   isDefault?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -409,6 +426,60 @@ export interface TranscriptResponse {
     rawAnsi: string;
     plainText: string;
   }>;
+}
+
+export interface RemoteSshTestResponse {
+  ok: boolean;
+  host: string;
+  username: string;
+  hostname?: string;
+  os?: string;
+  message: string;
+}
+
+export interface RemoteServiceStatus {
+  port: number;
+  listening: boolean;
+  url?: string | null;
+}
+
+export interface RemoteDiscoverResponse {
+  ok: boolean;
+  system: {
+    hostname: string;
+    os: string;
+    shell: string;
+    python: string;
+    node: string;
+    cwd: string;
+  };
+  hermes: {
+    commandAvailable: boolean;
+    commandPath?: string | null;
+    version: string;
+    home: string;
+    configExists: boolean;
+    profiles: string[];
+  };
+  services: Record<string, RemoteServiceStatus>;
+  suggestedCommands: string[];
+  warnings: string[];
+}
+
+export type RemoteServiceTarget = "dashboard" | "uiGateway" | "hermesGateway";
+
+export interface RemoteServiceActionResponse {
+  ok: boolean;
+  target: RemoteServiceTarget;
+  pid?: number | null;
+  url?: string | null;
+  message: string;
+}
+
+export interface RemoteLogsResponse {
+  ok: boolean;
+  logs: any[];
+  raw: string;
 }
 
 export type TuiWsMessage =

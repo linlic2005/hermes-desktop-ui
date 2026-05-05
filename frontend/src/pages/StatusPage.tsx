@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Activity, RefreshCw } from "lucide-react";
+import { Activity, RefreshCw, Server, Terminal, FileText } from "lucide-react";
 import { api } from "../api/client";
-import { GatewayError, SystemStatus } from "../api/types";
+import { GatewayError, SystemStatus, RemoteDiscoverResponse } from "../api/types";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { labelFor, stateLabels } from "../lib/i18n";
+import { useConnectionStore } from "../store/connectionStore";
 
 function errorText(error: unknown) {
   const gateway = error as GatewayError;
@@ -12,7 +13,11 @@ function errorText(error: unknown) {
 }
 
 export function StatusPage() {
+  const { connections, activeConnectionId } = useConnectionStore();
+  const activeConnection = connections.find(c => c.id === activeConnectionId);
+
   const [status, setStatus] = useState<SystemStatus | null>(null);
+  const [remoteInfo, setRemoteInfo] = useState<RemoteDiscoverResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -22,14 +27,57 @@ export function StatusPage() {
     setError(null);
     try {
       setStatus(await api.getStatus());
+      
+      if (activeConnection?.ssh) {
+        const res = await api.discoverRemote({
+          ...activeConnection.ssh,
+          ...activeConnection.remote
+        });
+        setRemoteInfo(res);
+      }
     } catch (err) {
-      setStatus(null);
-      setError(errorText(err));
+      // Don't fail the whole page if remote info fails
+      if (!status) setError(errorText(err));
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [activeConnection, status]);
+
+  const handleRestartRemote = async (target: any) => {
+    if (!activeConnection?.ssh) return;
+    setRefreshing(true);
+    try {
+      await api.restartRemoteService({
+        connection: activeConnection.ssh,
+        target,
+        port: target === "dashboard" ? activeConnection.remote?.dashboardPort : activeConnection.remote?.hermesGatewayPort,
+        hermesHome: activeConnection.remote?.hermesHome
+      });
+      await fetchStatus(true);
+    } catch (err) {
+      alert(errorText(err));
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleViewLogs = async (target: any) => {
+    if (!activeConnection?.ssh) return;
+    try {
+      const res = await api.getRemoteLogs({
+        connection: activeConnection.ssh,
+        target,
+        lines: 100,
+        hermesHome: activeConnection.remote?.hermesHome
+      });
+      // Basic modal or just console for now - in real app would use a dedicated log viewer
+      console.log(`Remote Logs for ${target}:`, res.raw);
+      alert(`已获取 ${target} 最近 100 行日志，请在控制台查看详情。\n\n内容预览:\n${res.raw.slice(0, 500)}...`);
+    } catch (err) {
+      alert(errorText(err));
+    }
+  };
 
   useEffect(() => {
     fetchStatus();
@@ -80,6 +128,53 @@ export function StatusPage() {
               <CardContent className="text-2xl font-semibold">{status.activeSessionsCount}</CardContent>
             </Card>
           </div>
+
+          {activeConnection?.ssh && remoteInfo && (
+            <Card className="border-blue-100 bg-blue-50/30 dark:border-blue-900/30 dark:bg-blue-950/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-lg text-blue-900 dark:text-blue-200">
+                  <Server className="h-5 w-5" />
+                  远程服务器管理: {activeConnection.ssh.host}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 lg:grid-cols-3">
+                  <div className="space-y-2">
+                    <div className="text-xs font-semibold text-blue-800/70 dark:text-blue-300/70 uppercase">系统信息</div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                      <span className="text-zinc-500">主机名</span><span className="font-mono">{remoteInfo.system.hostname}</span>
+                      <span className="text-zinc-500">操作系统</span><span>{remoteInfo.system.os}</span>
+                      <span className="text-zinc-500">Python</span><span>{remoteInfo.system.python}</span>
+                      <span className="text-zinc-500">Hermes</span><span>{remoteInfo.hermes.commandAvailable ? remoteInfo.hermes.version : "未找到"}</span>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-2 space-y-2">
+                    <div className="text-xs font-semibold text-blue-800/70 dark:text-blue-300/70 uppercase">服务状态与控制</div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {Object.entries(remoteInfo.services).map(([key, svc]: [string, any]) => (
+                        <div key={key} className="flex items-center justify-between rounded-lg border border-blue-100 bg-white p-3 dark:border-blue-900 dark:bg-zinc-900">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium capitalize">{key}</span>
+                            <span className="text-[10px] text-zinc-500">端口 {svc.port}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className={`mr-2 h-2 w-2 rounded-full ${svc.listening ? "bg-emerald-500" : "bg-zinc-300"}`} />
+                            <Button variant="ghost" size="xs" onClick={() => handleViewLogs(key)}>
+                              <FileText className="h-3 w-3" />
+                            </Button>
+                            <Button variant="ghost" size="xs" onClick={() => handleRestartRemote(key)}>
+                              <RefreshCw className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
